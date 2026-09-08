@@ -1,0 +1,775 @@
+<!--
+ * @Author       : shenqing
+ * @desc         : 组件描述
+ * @Date         : 2023-07-12 16:06:54
+ * @LastEditTime : 2026-03-11 12:03:18
+ * @LastEditors  : QLing
+ * @FilePath     : /ump/center-auth-server/src/main/resources/templates/loginNative.html
+-->
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+        <meta name="renderer" content="webkit" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>认证中心</title>
+        <link rel="shortcut icon" type="image/x-icon" href="https://ywtb.swu.edu.cn" />
+        <!--<link rel="icon" href="../favicon.ico">-->
+        <!-- 引入外部 CSS -->
+        <link href="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/css/login.css?v=7.0.2.1" rel="stylesheet" />
+        <script src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/js/xhrAxios.js?v=7.0.2.1"></script>
+        <script src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/js/jsencrypt.js?v=7.0.2.1"></script>
+        <!--<script th:src="${serverUrlStatic}+'/js/qrcode.min.js?v='+${staticVersion}"></script>-->
+        <script src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/js/qrcode.min.new.js?v=7.0.2.1"></script>
+        <script src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/js/jquery-3.6.0.min.js"></script>
+        <script src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/js/common.js?v=7.0.2.1"></script>
+        <script src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/js/login.js?v=7.0.2.1"></script>
+        <!--[if lt IE 10]>
+    <script type="text/javascript">
+        var str = "你的浏览器版本太low了,已经和时代脱轨了 :(";
+        var str2 =
+            "推荐使用:<a href='https://www.baidu.com/s?ie=UTF-8&wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8' target='_blank' style='color:blue;'>谷歌</a>," +
+            "<a href='https://www.baidu.com/s?ie=UTF-8&wd=%E7%81%AB%E7%8B%90%E6%B5%8F%E8%A7%88%E5%99%A8' target='_blank' style='color:blue;'>火狐</a>," +
+            "其他双核极速模式";
+        document.writeln(
+            "<pre style='text-align:center;color:#fff;background-color:#0cc; height:100%;border:0;position:fixed;top:0;left:0;width:100%;z-index:1234'>" +
+            "<h2 style='padding-top:12.5rem;margin:0'><strong>" +
+            str +
+            "<br/></strong></h2><h2>" +
+            str2 +
+            "</h2><h2 style='margin:0'><strong>如果你的使用的是双核浏览器,请切换到极速模式访问<br/></strong></h2></pre>"
+        );
+        document.execCommand("Stop");
+    </script>
+    <![endif]-->
+    </head>
+
+    <body>
+        <div id="messageContainer"></div>
+        <div id="loader" class="loader"></div>
+        <div id="loginContent" style="display: none">
+            <div
+                class="one-login"
+                id="oneLogin"
+                style="display:none;background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)),url(&quot;https://ywtb.swu.edu.cn/imageserver/pub/images/999999/officeHallApplicationCode/2025/11/04/1762250287748DycfJYF.png&quot;) center/cover no-repeat;">
+                <div class="one-login-top">
+                    <img src="https://ywtb.swu.edu.cn/logo/logo.png" alt="" class="one-logo" />
+                    <div class="one-wid"></div>
+                    <div class="one-logo-title" id="onetitle">认证中心</div>
+                </div>
+                <div class="one-login-center">
+                    <div class="one-login-content">
+                        <div class="one-login-content-left">
+                            <div style="margin: 0 2.5rem 0">
+                                <div class="one-left-top flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/login_title.png" alt="" class="mr-2" style="height: 1.5rem" />
+                                        <div class="one-left-text">通知公告</div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="one-left-img mr-2">
+                                            <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/left.png" alt="" onclick="noticePage('before')" />
+                                        </div>
+                                        <div class="one-left-img">
+                                            <img
+                                                src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/right.png"
+                                                alt=""
+                                                style="padding-left: 0.125rem"
+                                                onclick="noticePage('next')" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="oneUl"></div>
+                            </div>
+                        </div>
+                        <div class="one-login-content-right">
+                            <div class="one-right-title">欢迎使用,请登录</div>
+                            <ul class="Topmenu" id="onemenuList">
+                                <!-- 导航项会通过 JavaScript 添加到这里 -->
+                            </ul>
+                            <div>
+                                <div class="loginIng flex justify-center items-center">
+                                    <img
+                                        src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/computer.png"
+                                        alt=""
+                                        style="height: 1rem; margin: 0 0.25rem 0.0625rem 0" />
+
+                                    <div class="loginIng-text">
+                                        <span>您即将登录</span>
+                                        <span>：办事大厅</span>
+                                    </div>
+                                </div>
+                                <form id="oneloginForm">
+                                    <div id="oneApasswordLogin">
+                                        <div class="flex items-center justify-between inputStyle">
+                                            <div class="flex items-center">
+                                                <img
+                                                    src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/passWord_bg.png"
+                                                    alt=""
+                                                    class="mr-2 ml-3"
+                                                    style="height: 1rem" />
+                                                <input
+                                                    class="onInput"
+                                                    type="text"
+                                                    id="oneusername"
+                                                    placeholder="输入工号/学号"
+                                                    name="username"
+                                                    autocomplete="username" />
+                                            </div>
+                                        </div>
+                                        <div id="oneusernameError" class="Error"></div>
+                                        <div class="flex items-center justify-between inputStyle">
+                                            <div class="flex items-center">
+                                                <img
+                                                    src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/passWord_bg1.png"
+                                                    alt=""
+                                                    class="mr-2 ml-3"
+                                                    style="height: 1rem" />
+                                                <input
+                                                    class="onInput"
+                                                    name="password"
+                                                    type="password"
+                                                    id="onepassword"
+                                                    placeholder="请输入密码"
+                                                    autocomplete="current-password" />
+                                            </div>
+                                            <img
+                                                src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/openEye.png"
+                                                alt=""
+                                                id="oneopenEyeImg"
+                                                class="cursor-pointer mr-3"
+                                                style="height: 1rem; width: 1rem; display: none" />
+                                            <img
+                                                src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/closeEye.png"
+                                                alt=""
+                                                id="onecloseEyeImg"
+                                                class="cursor-pointer mr-3"
+                                                style="height: 1rem; width: 1rem" />
+                                        </div>
+                                        <div id="onepasswordError" class="Error text1"></div>
+                                    </div>
+                                    <div id="oneBpasswordLogin" style="display: none">
+                                        <div class="flex items-center justify-between inputStyle">
+                                            <div class="flex items-center">
+                                                <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/phone.png" alt="" class="mr-2 ml-3" style="height: 1rem" />
+                                                <input class="onInput" type="text" id="onephone" placeholder="请输入手机号" name="phone" autocomplete="phone" />
+                                            </div>
+                                        </div>
+                                        <div id="oneBphoneError" class="Error"></div>
+                                        <div class="flex items-center justify-between inputStyle">
+                                            <div class="flex items-center">
+                                                <img
+                                                    src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/answer.png"
+                                                    alt=""
+                                                    class="mr-2 ml-3"
+                                                    style="height: 1rem" />
+                                                <input
+                                                    class="onInput onInputCode"
+                                                    type="text"
+                                                    id="onecode"
+                                                    placeholder="请输入验证码"
+                                                    autocomplete="current-password" />
+                                            </div>
+                                            <div id="onebuttonText" class="buttonTextblue" onclick="getCodeClick()">获取验证码</div>
+                                        </div>
+
+                                        <div id="oneBpasswordError" class="Error text1"></div>
+                                    </div>
+                                    <div id="oneCpasswordLogin" style="display: none; flex-direction: column; height: 13.5rem" class="">
+                                        <div class="qrcode">
+                                            <canvas id="oneQrcodeID"></canvas>
+                                            <!--<img th:src="${sysSquareLogo}" alt="" class="qrcodelose-logo">-->
+                                            <div class="qrcodelose" id="oneqrcodelose">
+                                                <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/warning1.png" alt="" class="qrcodelose-img" />
+                                                <div class="qrcodelose-text">二维码已失效</div>
+                                                <div class="qrcodelose-text1" onclick="creatQrCode('oneQrcodeID')">刷新二维码</div>
+                                            </div>
+                                        </div>
+                                        <div class="qrcodetext" id="oneqrcodetextID">
+                                            <!--请使用《企业微信》《微信》扫码登录-->
+                                            请使用智慧校园app进行扫码
+                                        </div>
+                                    </div>
+
+                                    <div id="oneDpasswordLogin" style="display: none; flex-direction: column; height: 13.5rem" class="">
+                                        <div class="qrcode">
+                                            <canvas id="faceOneQrcodeID"></canvas>
+                                            <!--<img th:src="${sysSquareLogo}" alt="" class="qrcodelose-logo">-->
+                                            <div class="qrcodelose" id="faceOneqrcodelose">
+                                                <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/warning1.png" alt="" class="qrcodelose-img" />
+                                                <div class="qrcodelose-text">二维码已失效</div>
+                                                <div class="qrcodelose-text1" onclick="creatQrCode('faceOneQrcodeID')">刷新二维码</div>
+                                            </div>
+                                        </div>
+                                        <div class="qrcodetext" id="faceoneqrcodetextID">
+                                            <!--请使用《企业微信》《微信》扫码登录-->
+                                            请使用智慧校园app扫码
+                                        </div>
+                                    </div>
+                                    <div id="oneqrcode">
+                                        <div id="oneoperator-container" class="radio-group"></div>
+                                        <div class="flex items-center">
+                                            <img
+                                                src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/NO.png"
+                                                alt=""
+                                                id="oneNO"
+                                                class="cursor-pointer mr-2"
+                                                style="height: 0.875rem" />
+                                            <img
+                                                src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/YES.png"
+                                                alt=""
+                                                id="oneYES"
+                                                style="display: none; height: 0.875rem"
+                                                class="cursor-pointer mr-2" />
+
+                                            <div style="font-size: 0.75rem">
+                                                <span class="login-tip-text">已阅读并同意</span>
+                                                <span
+                                                    class="login-link-text"
+                                                    data-url="https://ywtb.swu.edu.cn/unified_identity_logon/#/loginNoticeMb?addParam=PRIVACY_AGREEMENT"
+                                                    onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">
+                                                    《用户协议》
+                                                </span>
+                                                <span class="login-tip-text">与</span>
+                                                <span
+                                                    class="login-link-text"
+                                                    data-url="https://ywtb.swu.edu.cn/unified_identity_logon/#/loginNoticeMb?addParam=PRIVACY_POLICY"
+                                                    onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">
+                                                    《隐私政策》
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="Error" id="oneAgreementError"></div>
+                                        <button id="onesubmit" type="submit" class="loginForm-button">登录</button>
+                                        <div id="oneformMessage" class="success"></div>
+                                    </div>
+                                </form>
+                                <div class="flex items-center justify-between mb-6">
+                                    <div
+                                        id="activateUser"
+                                        class="newUserText"
+                                        data-url="https://ywtb.swu.edu.cn/new-office-hall-authentication/index.html#/newLogin"
+                                        onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">
+                                        新用户激活
+                                    </div>
+                                    <div class="newUserText" id="onequestion">
+                                        <!--     登录遇到问题？-->
+                                    </div>
+                                    <div
+                                        id="forgetPassword"
+                                        class="newUserText"
+                                        data-url="https://ywtb.swu.edu.cn/new-office-hall-authentication/index.html#/forgetPassword"
+                                        onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">
+                                        忘记密码？
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between mb-4" id="onethirdLoginTextId">
+                                    <div class="xian"></div>
+                                    <div class="login-tip-text" style="font-size: 0.75rem">其他方式登录</div>
+                                    <div class="xian"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <!--<img th:src="${serverUrlStatic}+'/purenative/images/zhifubao.png'" alt="" class="otherLoginImg">-->
+                                <img
+                                    id="wechatMpLoginId"
+                                    src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/weixin.png"
+                                    alt=""
+                                    class="otherLoginImg"
+                                    type="wechatMpLogin"
+                                    onclick="tologin(this)" />
+                                <img
+                                    id="qqLoginId"
+                                    src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/qq.png"
+                                    alt=""
+                                    class="otherLoginImg"
+                                    type="qqLogin"
+                                    onclick="tologin(this)" />
+                                <!--<img th:src="${serverUrlStatic}+'/purenative/images/apple.png'" alt="" class="otherLoginImg">-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottomPage">
+                    <ul class="bottomMenu" id="onebottomMenu">
+                        <!-- 导航项会通过 JavaScript 添加到这里 -->
+                    </ul>
+                    <div class="bottomText">西南大学版权所有  渝ICP 06005063号-4</div>
+                </div>
+            </div>
+            <div class="two-login" id="twoLogin" style="background: url(&quot;https://ywtb.swu.edu.cn/imageserver/pub/images/999999/officeHallApplicationCode/2025/11/04/1762250287748DycfJYF.png&quot;);">
+                <div class="two-login-mask" id="loginMask">
+                    <div class="two-login-top">
+                        <div style="width: 75rem; height: 100%; margin: 0 auto" class="flex justify-between items-center" id="top">
+                            <div class="flex items-center">
+                                <img src="https://ywtb.swu.edu.cn/logo/bottomLogo.png" alt="" class="two-logo" />
+                                <div class="two-wid"></div>
+                                <div class="two-logo-title">认证中心</div>
+                                <div class="twologinIng flex justify-center items-center">
+                                    <img
+                                        src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/computer.png"
+                                        alt=""
+                                        style="height: 1rem; margin: 0 0.25rem 0.0625rem 0" />
+                                    <div class="loginIng-text" id="onetitle">
+                                        <span>您即将登录</span>
+                                        <span>：办事大厅</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <!--<img th:src="${serverUrlStatic}+'/purenative/images/warning.png'" alt="" style="height:1rem;margin-top:.125rem">-->
+                                <div class="ml-1" style="font-size: 14px; color: #0a82e6; cursor: pointer">
+                                    <!--  登录遇到问题?-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center two-login-allContent">
+                        <div class="flex" id="LoginContentState">
+                            <div class="carousel-container" id="lunbotu">
+                                <div class="carousel"></div>
+                                <div class="buttonALl flex items-center mb-4"></div>
+                            </div>
+                            <div class="two-login-content" id="twoContent">
+                                <div class="three-login-content-right">
+                                    <div class="two-right-title">欢迎使用,请登录</div>
+                                    <ul class="Topmenu" id="menuList"></ul>
+                                    <div>
+                                        <form id="loginForm">
+                                            <div id="ApasswordLogin">
+                                                <div class="flex items-center justify-between inputStyle">
+                                                    <div class="flex items-center">
+                                                        <img
+                                                            src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/passWord_bg.png"
+                                                            alt=""
+                                                            class="mr-2 ml-3"
+                                                            style="height: 1rem" />
+                                                        <input
+                                                            class="onInput"
+                                                            type="text"
+                                                            id="username"
+                                                            placeholder="输入工号/学号"
+                                                            name="username"
+                                                            autocomplete="username" />
+                                                    </div>
+                                                </div>
+                                                <div id="usernameError" class="Error"></div>
+                                                <div class="flex items-center justify-between inputStyle">
+                                                    <div class="flex items-center justify-between" style="width: 100%">
+                                                        <div class="flex items-center">
+                                                            <img
+                                                                src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/passWord_bg1.png"
+                                                                alt=""
+                                                                class="mr-2 ml-3"
+                                                                style="height: 1rem" />
+                                                            <input
+                                                                class="onInput"
+                                                                name="password"
+                                                                type="password"
+                                                                id="password"
+                                                                placeholder="请输入密码"
+                                                                autocomplete="current-password" />
+                                                        </div>
+                                                        <img
+                                                            src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/openEye.png"
+                                                            alt=""
+                                                            id="openEyeImg"
+                                                            class="cursor-pointer mr-3"
+                                                            style="height: 1rem; width: 1rem; display: none" />
+                                                        <img
+                                                            src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/closeEye.png"
+                                                            alt=""
+                                                            id="closeEyeImg"
+                                                            class="cursor-pointer mr-3"
+                                                            style="height: 1rem; width: 1rem" />
+                                                    </div>
+                                                </div>
+
+                                                <div id="passwordError" class="Error text1"></div>
+                                            </div>
+                                            <div id="BpasswordLogin" style="display: none">
+                                                <div class="flex items-center justify-between inputStyle">
+                                                    <div class="flex items-center">
+                                                        <img
+                                                            src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/phone.png"
+                                                            alt=""
+                                                            class="mr-2 ml-3"
+                                                            style="height: 1rem" />
+                                                        <input
+                                                            class="onInput"
+                                                            type="text"
+                                                            id="phone"
+                                                            placeholder="请输入手机号"
+                                                            name="phone"
+                                                            autocomplete="phone" />
+                                                    </div>
+                                                </div>
+                                                <div id="BphoneError" class="Error"></div>
+                                                <div class="flex items-center justify-between inputStyle">
+                                                    <div class="flex items-center">
+                                                        <img
+                                                            src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/answer.png"
+                                                            alt=""
+                                                            class="mr-2 ml-3"
+                                                            style="height: 1rem" />
+                                                        <input
+                                                            class="onInput onInputCode"
+                                                            name="code"
+                                                            type="code"
+                                                            id="code"
+                                                            placeholder="请输入验证码"
+                                                            autocomplete="current-password" />
+                                                    </div>
+                                                    <div id="buttonText" class="buttonTextblue" onclick="getCodeClick()">获取验证码</div>
+                                                </div>
+
+                                                <div id="BpasswordError" class="Error text1"></div>
+                                            </div>
+
+                                            <div style="display: none; flex-direction: column; height: 13.5rem" id="CpasswordLogin">
+                                                <div class="qrcode">
+                                                    <canvas id="QrcodeID"></canvas>
+                                                    <div class="qrcodelose" id="qrcodelose">
+                                                        <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/warning1.png" alt="" class="qrcodelose-img" />
+                                                        <div class="qrcodelose-text">二维码已失效</div>
+                                                        <div class="qrcodelose-text1" onclick="creatQrCode('QrcodeID')">刷新二维码</div>
+                                                    </div>
+                                                </div>
+                                                <div class="qrcodetext" id="qrcodetextID">
+                                                    <!--请使用《企业微信》《微信》扫码登录-->
+                                                    请使用智慧校园app进行扫码
+                                                </div>
+                                            </div>
+                                            <div style="display: none; flex-direction: column; height: 13.5rem" id="DpasswordLogin">
+                                                <div class="qrcode">
+                                                    <canvas id="FaceQrcodeID"></canvas>
+                                                    <div class="qrcodelose" id="faceQrcodelose">
+                                                        <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/warning1.png" alt="" class="qrcodelose-img" />
+                                                        <div class="qrcodelose-text">二维码已失效</div>
+                                                        <div class="qrcodelose-text1" onclick="creatQrCode('FaceQrcodeID')">刷新二维码</div>
+                                                    </div>
+                                                </div>
+                                                <div class="qrcodetext" id="faceqrcodetextID">
+                                                    <!--请使用《企业微信》《微信》扫码登录-->
+                                                    请使用智慧校园扫码
+                                                </div>
+                                            </div>
+                                            <div id="qrcode">
+                                                <div id="operator-container" class="radio-group"></div>
+                                                <div class="flex items-center">
+                                                    <img
+                                                        src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/NO.png"
+                                                        alt=""
+                                                        id="NO"
+                                                        class="cursor-pointer mr-2"
+                                                        style="height: 0.875rem" />
+                                                    <img
+                                                        src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/YES.png"
+                                                        alt=""
+                                                        id="YES"
+                                                        style="display: none; height: 0.875rem"
+                                                        class="cursor-pointer mr-2" />
+
+                                                    <div style="font-size: 0.75rem">
+                                                        <span class="login-tip-text">已阅读并同意</span>
+                                                        <span
+                                                            class="login-link-text"
+                                                            data-url="https://ywtb.swu.edu.cn/unified_identity_logon/#/loginNoticeMb?addParam=PRIVACY_AGREEMENT"
+                                                            onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">
+                                                            《用户协议》
+                                                        </span>
+                                                        <span class="login-tip-text">与</span>
+                                                        <span
+                                                            class="login-link-text"
+                                                            data-url="https://ywtb.swu.edu.cn/unified_identity_logon/#/loginNoticeMb?addParam=PRIVACY_POLICY"
+                                                            onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">
+                                                            《隐私政策》
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div id="agreementError" class="Error"></div>
+                                                <button id="submit" type="submit" class="loginForm-button">登录</button>
+                                                <div id="formMessage" class="success"></div>
+                                            </div>
+                                        </form>
+                                        <div class="flex items-center justify-between mb-6">
+                                            <div
+                                                id="activateUser"
+                                                class="newUserText"
+                                                data-url="https://ywtb.swu.edu.cn/new-office-hall-authentication/index.html#/newLogin"
+                                                onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">
+                                                <!-- 新用户激活 -->
+                                                新用户激活
+                                            </div>
+                                            <div class="newUserText" id="question">
+                                                <!--登录遇到问题？-->
+                                            </div>
+                                            <div
+                                                id="forgetPassword"
+                                                class="newUserText"
+                                                data-url="https://ywtb.swu.edu.cn/new-office-hall-authentication/index.html#/forgetPassword"
+                                                onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">
+                                                忘记密码？
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between mb-4" id="thirdLoginTextId">
+                                            <div class="xian"></div>
+                                            <div class="login-tip-text" style="font-size: 0.75rem">其他方式登录</div>
+                                            <div class="xian"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <!--<img th:src="${serverUrlStatic}+'/purenative/images/zhifubao.png'" alt="" class="otherLoginImg">-->
+                                        <img
+                                            id="wechatMpLoginId"
+                                            src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/weixin.png"
+                                            alt=""
+                                            class="otherLoginImg"
+                                            type="wechatMpLogin"
+                                            onclick="tologin(this)" />
+                                        <img
+                                            id="qqLoginId"
+                                            src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/qq.png"
+                                            alt=""
+                                            class="otherLoginImg"
+                                            type="qqLogin"
+                                            onclick="tologin(this)" />
+                                        <!--<img th:src="${serverUrlStatic}+'/purenative/images/apple.png'" alt="" class="otherLoginImg">-->
+                                    </div>
+                                </div>
+                                <div class="two-login-content-left">
+                                    <div style="margin: 0 2.5rem 0">
+                                        <div class="two-left-top flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <img
+                                                    src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/login_title.png"
+                                                    alt=""
+                                                    class="mr-2"
+                                                    style="height: 1.5rem" />
+                                                <div class="two-left-text">通知公告</div>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <div class="two-left-img mr-2">
+                                                    <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/left.png" alt="" onclick="noticePage('before')" />
+                                                </div>
+                                                <div class="two-left-img">
+                                                    <img
+                                                        src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/right.png"
+                                                        alt=""
+                                                        style="padding-left: 0.125rem"
+                                                        onclick="noticePage('next')" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="twoUl"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="twobottomPage">
+                        <ul class="bottomMenu" id="bottomMenu"></ul>
+                        <div class="twobottomText">西南大学版权所有  渝ICP 06005063号-4</div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialogContent" id="dialogContent">
+                <div class="dialog">
+                    <div class="title">
+                        <div>提示</div>
+                        <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/close.svg" alt="" class="cursor-pointer" id="closeDig" />
+                    </div>
+                    <div class="content">
+                        <span>
+                            <span>点击同意并登录表示您已阅读并同意</span>
+                            <span class="specialText" data-url="https://ywtb.swu.edu.cn/unified_identity_logon/#/loginNoticeMb?addParam=PRIVACY_AGREEMENT" onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">用户协议</span>
+                            <span>和</span>
+                            <span class="specialText" data-url="https://ywtb.swu.edu.cn/unified_identity_logon/#/loginNoticeMb?addParam=PRIVACY_POLICY" onclick="openUrl(this.getAttribute(&#39;data-url&#39;))">隐私协议</span>
+                        </span>
+                    </div>
+                    <div class="butttonContent">
+                        <div class="cancle" id="cancleDig">取消</div>
+                        <div class="confirm" id="confirmDig">同意并登录</div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialogContent" id="checkContent">
+                <div class="checkDialog">
+                    <div class="title">
+                        <div>请输入验证码</div>
+                        <img src="https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server/purenative/images/close.svg" alt="" class="cursor-pointer" id="checkCloseDig" />
+                    </div>
+                    <div class="checkwarning">
+                        <div style="display: flex; align-items: center; justify-content: center">
+                            <input type="text" class="checkInput" id="codeInput1" />
+                            <input type="text" class="checkInput" id="codeInput2" />
+                            <input type="text" class="checkInput" id="codeInput3" />
+                            <input type="text" class="checkInput" id="codeInput4" />
+                            <div id="checkImg">
+                                <img src="" alt="" class="checkImg" onclick="(getVerifyCode(this), clearImageCodeInputAndfocus())" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            //过渡页面加载-该部分内容不放入js文件-start
+            window.onload = function () {
+                //debugger
+                const loader = document.getElementById('loader')
+                loader.style.display = 'none' // 隐藏过渡页面
+
+                const loginContent = document.getElementById('loginContent')
+                loginContent.style.display = 'block' // 显示登录页面
+                warningClick(noticeCurrentPage) // 通知公告拉取
+            }
+
+            //变量
+            var serverUrl = 'https://ywtb.swu.edu.cn/center-auth-server'
+            var serverUrlStatic = 'https://ywtb.swu.edu.cn/center-auth-server/static-center-auth-server'
+            var isMobile = 'false'
+            var isWechatBower = 'false'
+            var universityId = '106350'
+            var clientType = 'PC'
+            var nativeGetYhTicketSwitch = 'YES'
+            var appId = 'officeHallApplicationCode'
+            var loginType = 'login'
+            var passWordErrorNum = parseInt('3')
+            var passwordVerifyCodeEnable = 'ON'
+            var loginInstructionsUrl = ''
+            var zeroTrustNotes = ''
+            var appDownloadUrl = ''
+            var footInfo = '西南大学版权所有  渝ICP 06005063号-4'
+            var loginPageBackgroundUrlPc = 'https://ywtb.swu.edu.cn/imageserver/pub/images/999999/officeHallApplicationCode/2025/11/04/1762250287748DycfJYF.png'
+            var loginPageCarouselImage = '[]'
+
+            //三方登录开关
+            var thirdEnable = 'ON'
+            //扫码开关
+            var scanEnable = 'ON'
+            //人脸扫码开关
+            var faceEnable = 'OFF'
+            //短信开关
+            var smsEnable = 'ON'
+            var forgetPasswordEnable = 'ON'
+            var scanPromptInfo = '请使用智慧校园app进行扫码'
+            var forgetPasswordUrl = 'https://ywtb.swu.edu.cn/new-office-hall-authentication/index.html#/forgetPassword'
+            var pcUpPasswordUrl = 'https://ywtb.swu.edu.cn/new-office-hall-authentication/index.html#/weakPassword'
+            var sysSquareLogo = 'https://ywtb.swu.edu.cn/logo/topLogoWhite1.png'
+
+            var qrTaskStatus = false
+            var isover = true
+            //二维码接口请求次数
+            var forCount = 0
+
+            var faceQrTaskStatus = false
+            var faceIsover = true
+            //二维码接口请求次数
+            var faceForCount = 0
+
+            //通知公告当前页
+            var noticeCurrentPage = 1
+            var noticeMaxPage = 1
+
+            //过渡页面加载-该部分内容不放入js文件-end
+
+            //部分全局变量
+            //风格切换
+            var loginStyle = 'three'
+            loginStyle = loginStyle ? loginStyle : 'one'
+            //验证码点击事件
+            var isDisabled = false
+            //账户密码登录or短信验证码登录or扫码登录
+            var select = 'A'
+            const LoginContentState = document.getElementById('LoginContentState')
+            const lunbotuStyle = document.getElementById('lunbotu')
+            const loginMask = document.getElementById('loginMask')
+            const oneLogin = document.getElementById('oneLogin')
+            const twoLogin = document.getElementById('twoLogin')
+            const twoContent = document.getElementById('twoContent')
+            if (loginStyle === 'one') {
+                oneLogin.style.display = 'flex'
+                twoLogin.style.display = 'none'
+            } else if (loginStyle === 'two') {
+                oneLogin.style.display = 'none'
+                twoLogin.style.display = 'block'
+                LoginContentState.className = 'twoLoginContent'
+                twoContent.className = 'twoContent'
+                lunbotuStyle.className = 'closeNone'
+                question.style.display = 'none'
+                twoLogin.className = 'two-login'
+            } else if (loginStyle === 'three') {
+                oneLogin.style.display = 'none'
+                twoLogin.style.display = 'block'
+                LoginContentState.className = 'threeLoginContent'
+                loginMask.className = 'three-login-mask'
+                twoContent.className = 'twoContent'
+                question.style.display = 'none'
+                twoLogin.className = 'three-login'
+            } else if (loginStyle === 'four') {
+                loginMask.className = 'four-login-mask'
+                oneLogin.style.display = 'none'
+                twoLogin.style.display = 'block'
+                LoginContentState.className = 'fourLoginContent'
+                lunbotuStyle.className = 'closeNone'
+                question.style.display = 'none'
+                twoLogin.className = 'two-login'
+            } else if (loginStyle === 'five') {
+                // 透明风格 - 基于 one: 去除背景遮罩, 白色卡片居中
+                oneLogin.style.display = 'flex';
+                oneLogin.className = 'five-login';
+                oneLogin.style.background = 'url("' + loginPageBackgroundUrlPc + '") center/cover no-repeat';
+                twoLogin.style.display = 'none';
+            } else if (loginStyle === 'six') {
+                // 透明风格 - 基于 two: 透明遮罩, 内容右对齐
+                oneLogin.style.display = 'none';
+                twoLogin.style.display = 'block';
+                LoginContentState.className = 'sixLoginContent';
+                twoContent.className = 'twoContent';
+                lunbotuStyle.className = 'closeNone';
+                question.style.display = 'none';
+                twoLogin.className = 'two-login';
+                loginMask.className = 'six-login-mask';
+            } else if (loginStyle === 'seven') {
+                // 透明风格 - 基于 three: 透明遮罩, 内容居中(带轮播图)
+                oneLogin.style.display = 'none';
+                twoLogin.style.display = 'block';
+                LoginContentState.className = 'sevenLoginContent';
+                loginMask.className = 'seven-login-mask';
+                twoContent.className = 'twoContent';
+                question.style.display = 'none';
+                twoLogin.className = 'three-login';
+            } else if (loginStyle === 'eight') {
+                // 透明风格 - 基于 four: 透明遮罩, 内容居中
+                loginMask.className = 'eight-login-mask';
+                oneLogin.style.display = 'none';
+                twoLogin.style.display = 'block';
+                LoginContentState.className = 'eightLoginContent';
+                lunbotuStyle.className = 'closeNone';
+                question.style.display = 'none';
+                twoLogin.className = 'two-login';
+            }
+
+            var ispListStr = ''
+            var ispSelEnable = 'NO'
+            var ispList = []
+            //当前选中值
+            var currentSelection
+
+            processAbilityOnOff() //开关控制
+            eyeClick() //睁眼闭眼
+            menuClick() // 导航项点击事件+表单验证+协议与隐私政策--start
+            bottomMenuClick() //底部点击事件
+            chekNum() //初始化验证码
+            if (loginStyle === 'three' || loginStyle === 'seven') {
+                lunbotuClick() //轮播图
+            }
+        </script>
+    </body>
+</html>
