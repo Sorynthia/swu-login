@@ -21,7 +21,7 @@ uv sync
 ### 使用示例
 
 ```python
-from swu_login import login
+from swu_auth import login
 
 # 基础登录
 success, message = login("你的学号", "你的密码")
@@ -51,6 +51,21 @@ success, message = login(
 3. **验证码处理** - 下载图形验证码并识别
 4. **登录请求** - 提交完整的加密凭证和验证码
 
+## 项目结构
+
+```
+.
+├── src/
+│   └── swu_auth/
+│       ├── __init__.py
+│       ├── client.py      # 登录客户端
+│       ├── crypto.py      # RSA 加密
+│       └── config.py      # 配置管理
+├── tests/                 # 单元测试
+├── pyproject.toml         # 项目配置和依赖
+└── README.md
+```
+
 ## 环境要求
 
 - Python 3.13+
@@ -67,8 +82,6 @@ success, message = login(
 
 - **[swu-checkin](https://github.com/Sorynthia/swu-checkin)** - 钉钉查寝自动打卡脚本
 - **[swudk-dingtalk](https://github.com/Sorynthia/swudk-dingtalk)** - 钉钉扫码打卡前端工具
-
-如需完整的后端服务系统（API、用户管理、定时任务等），请参考 swudk 私有仓库。
 
 ## 贡献指南
 
