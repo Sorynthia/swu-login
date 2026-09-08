@@ -1,3 +1,6 @@
 * text=auto eol=lf
 *.{cmd,[cC][mM][dD]} text eol=crlf
 *.{bat,[bB][aA][tT]} text eol=crlf
+
+# 排除证据文件的语言统计
+evidence/** linguist-documentation
