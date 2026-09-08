@@ -1,29 +1,55 @@
 # 西南大学统一身份认证登录脚本
 
-根据认证页面前端源码复现账号密码登录流程：初始化会话、下载图形验证码、按前端规则进行 RSA 密码加密，并提交登录请求。
+> ⚠️ **实验性质**：本项目基于逆向分析西南大学当前统一身份认证前端实现。该登录方式**尚未正式上线**，SWU 将来可能会采用此协议，当前主要用于技术研究和前瞻性适配准备。
 
-## 安装依赖
+根据认证页面前端源码完整复现账号密码登录流程：初始化会话、获取 RSA 公钥、下载图形验证码、按前端规则进行 RSA 密码加密，并提交完整登录请求。
 
-```powershell
-python -m pip install -r requirements.txt
+---
+
+## 快速开始
+
+### 安装
+
+克隆仓库并安装依赖：
+
+```bash
+git clone https://github.com/your-org/swu-login.git
+cd swu-login
+pip install -e .
 ```
 
-## 使用方法
+或直接安装依赖包：
 
-从仓库根目录运行：
+```bash
+pip install requests pycryptodome pytest
+```
 
-```powershell
+### 命令行使用
+
+```bash
 python src/login.py
 ```
 
-程序启动后依次输入用户名、密码和验证码。密码使用隐藏输入，验证码保存为当前目录下的 `captcha.png`。服务器原始响应会以 JSON 输出，`code == 200` 表示登录完成，其他状态保留服务端字段。
+程序启动后依次输入：
+- **用户名**：学号或教工号
+- **密码**：统一认证密码（隐藏输入）
+- **验证码**：查看自动保存的 `captcha.png` 并输入四位字符
 
-## 测试
+服务器原始响应会以 JSON 格式输出，`code == 200` 表示登录成功，其他状态码和错误信息保留服务端原始字段。
 
-```powershell
+---
+
+## 开发与测试
+
+运行单元测试：
+
+```bash
 python -m pytest -q
 ```
 
-部署地址、学校 ID、超时和 User-Agent 位于 `src/swu_auth/config.py`。
+### 配置
 
-协议细节见 [docs/protocol.md](docs/protocol.md)，浏览器逆向依据见 [docs/evidence.md](docs/evidence.md)。
+部署地址、学校 ID、请求超时和 User-Agent 等配置位于 `src/swu_auth/config.py`。
+
+- 协议细节：[docs/protocol.md](docs/protocol.md)  
+- 浏览器逆向依据：[docs/evidence.md](docs/evidence.md)
